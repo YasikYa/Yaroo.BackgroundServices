@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaroo.BackgroundServices", "Yaroo.BackgroundServices\Yaroo.BackgroundServices.csproj", "{FB531880-75CE-4CFE-B978-E81B90A55381}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaroo.BackgroundServices", "Yaroo.BackgroundServices\Yaroo.BackgroundServices.csproj", "{FB531880-75CE-4CFE-B978-E81B90A55381}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yaroo.BackgroundServices.SampleAPI", "Yaroo.BackgroundServices.SampleAPI\Yaroo.BackgroundServices.SampleAPI.csproj", "{D78D1829-A407-47D0-A032-D9FEF2E8B87B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FB531880-75CE-4CFE-B978-E81B90A55381}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB531880-75CE-4CFE-B978-E81B90A55381}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB531880-75CE-4CFE-B978-E81B90A55381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D78D1829-A407-47D0-A032-D9FEF2E8B87B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D78D1829-A407-47D0-A032-D9FEF2E8B87B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D78D1829-A407-47D0-A032-D9FEF2E8B87B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D78D1829-A407-47D0-A032-D9FEF2E8B87B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
