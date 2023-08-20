@@ -22,14 +22,14 @@ namespace Yaroo.BackgroundServices.BackgroundService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Long running job is starting");
+            _logger.LogInformation("Long running job is starting. Action: {action}", _action.Name);
             await RunJob(stoppingToken);
-            _logger.LogInformation("Long  running job completed");
+            _logger.LogInformation("Long  running job completed. Action: {action}", _action.Name);
         }
 
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Long running job is stopped");
+            _logger.LogInformation("Long running job is stopped. Action: {action}", _action.Name);
             _action.Stop();
             await base.StopAsync(stoppingToken);
         }
@@ -42,15 +42,15 @@ namespace Yaroo.BackgroundServices.BackgroundService
                 {
                     var iterationScopeProvider = GetIterationScopedProvider();
 
-                    _logger.LogTrace("Starting new iteration - waiting for trigger");
+                    _logger.LogTrace("Starting new iteration - waiting for trigger. Action: {action}", _action.Name);
                     var iterationInput = await _actionTrigger.WaitForTrigger(iterationScopeProvider, stoppingToken);
-                    _logger.LogTrace("Triggering with input {inputData}", iterationInput);
+                    _logger.LogTrace("Triggering with input {inputData}. Action: {action}", iterationInput, _action.Name);
                     await _action.ExecuteAsync(iterationInput, iterationScopeProvider, stoppingToken);
-                    _logger.LogTrace("Iteration completed");
+                    _logger.LogTrace("Iteration completed. Action: {action}", _action.Name);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Job iteration failed with exception - keep running");
+                    _logger.LogError(ex, "Job iteration failed with exception - keep running. Action: {action}", _action.Name);
                 }
             }
         }
