@@ -30,7 +30,7 @@ namespace Yaroo.BackgroundServices.BackgroundService
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Long running job is stopped");
-
+            _action.Stop();
             await base.StopAsync(stoppingToken);
         }
 

@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yaroo.BackgroundServices.BackgroundAction
+﻿namespace Yaroo.BackgroundServices.BackgroundAction
 {
-    public interface IBackgroundAction<TIterationInput>
+    public interface IBackgroundAction
+    {
+        public string Name { get; }
+
+        public string Type { get; }
+
+        public string Status { get; }
+
+        void Stop();
+    }
+
+    public interface IBackgroundAction<TIterationInput> : IBackgroundAction
     {
         Task ExecuteAsync(TIterationInput input, IServiceProvider services, CancellationToken stoppingToken);
     }

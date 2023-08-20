@@ -11,10 +11,10 @@ namespace Yaroo.BackgroundServices.SampleAPI.BackgroundActions
             _logger = logger;
         }
 
-        protected override Task ExecuteOnTimerTrigger(IServiceProvider services, CancellationToken stoppingToken)
+        protected override async Task ExecuteOnTimerTrigger(IServiceProvider services, CancellationToken stoppingToken)
         {
+            await Task.Delay(2000);
             _logger.LogInformation("SimpleTimerAction executed");
-            return Task.CompletedTask;
         }
     }
 }
