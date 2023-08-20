@@ -1,8 +1,27 @@
+using Yaroo.BackgroundServices.SampleAPI.BackgroundActions;
+using Yaroo.BackgroundServices.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 // Add services to the container.
+var services = builder.Services;
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+services.AddOptions();
+
+services.RegisterTimerAction<SimpleTimerAction>(o =>
+{
+    o.IterationDelaySeconds = 1;
+});
 
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -15,5 +34,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+app.MapControllers();
 
 app.Run();

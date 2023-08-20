@@ -13,6 +13,7 @@ namespace Yaroo.BackgroundServices.Extensions
             where TAction : class, IBackgroundAction<TActionIterationInput>
             where TTrigger : class, IBackgroundActionTrigger<TAction, TActionIterationInput>
         {
+            services.AddSingleton<TAction>();
             services.AddSingleton<IBackgroundAction<TActionIterationInput>, TAction>();
             services.AddSingleton<IBackgroundActionTrigger<TAction, TActionIterationInput>, TTrigger>();
             services.AddHostedService<LongRunningJob<TAction, TActionIterationInput>>();
