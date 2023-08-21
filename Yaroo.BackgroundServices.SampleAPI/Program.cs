@@ -1,5 +1,6 @@
 using Yaroo.BackgroundServices.SampleAPI.BackgroundActions;
 using Yaroo.BackgroundServices.Extensions;
+using Yaroo.BackgroundServices.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ services.RegisterTimerAction<SimpleTimerAction>(o =>
     o.IterationDelaySeconds = 1;
 });
 
+services.RegisterStartupAction<SimpleStartupAction>();
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -33,6 +36,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStartupActionMiddleware();
 app.UseRouting();
 app.MapControllers();
 
