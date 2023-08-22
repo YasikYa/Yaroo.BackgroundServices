@@ -6,7 +6,6 @@ using Yaroo.BackgroundServices.BackgroundAction.StartupAction;
 using Yaroo.BackgroundServices.BackgroundAction.TimerAction;
 using Yaroo.BackgroundServices.BackgroundService;
 using Yaroo.BackgroundServices.Utility;
-using static Yaroo.BackgroundServices.Extensions.ServiceCollectionExtensions;
 
 namespace Yaroo.BackgroundServices.Extensions
 {
@@ -51,11 +50,16 @@ namespace Yaroo.BackgroundServices.Extensions
             return services;
         }
 
-        public static IBackgroundQueueHandlersBuilder<TMessage> RegisterBackgroundQueue<TMessage>(this IServiceCollection services)
+        #region QueueAction
+
+        public static IBackgroundQueueHandlersBuilder<TMessage> RegisterBackgroundQueue<TMessage>(this IServiceCollection services) => services.RegisterBackgroundQueue<TMessage>(options => { });
+
+        public static IBackgroundQueueHandlersBuilder<TMessage> RegisterBackgroundQueue<TMessage>(this IServiceCollection services, Action<BackgroundQueueOptions> configureOptions)
         {
             if (services is null)
                 throw new ArgumentNullException(nameof(services));
 
+            services.Configure(TypeNameHelper.GetTypeName<TMessage>(), configureOptions);
             services.TryAddSingleton<IBackgroundQueue<TMessage>, BackgroundQueue<TMessage>>();
             services.TryAddSingleton<IBackgroundActionTrigger<QueueAction<TMessage>, TMessage>, QueueActionTrigger<TMessage>>();
             services.AddHostedService<LongRunningJob<QueueAction<TMessage>, TMessage>>();
@@ -87,6 +91,8 @@ namespace Yaroo.BackgroundServices.Extensions
                 return this;
             }
         }
+
+        #endregion
 
         private static IServiceCollection RegisterActionWithStatusCollector<TAction>(this IServiceCollection services)
             where TAction : class, IBackgroundAction
