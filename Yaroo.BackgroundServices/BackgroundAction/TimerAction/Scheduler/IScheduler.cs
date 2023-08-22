@@ -2,7 +2,7 @@
 {
     public interface IScheduler<TAction> where TAction : TimerAction
     {
-        TimeSpan GetNextWaitInterval();
+        (TimeSpan nextInterval, CancellationToken resetSignal) GetNextWaitInterval();
 
         void ScheduleNextOverride(DateTimeOffset scheduleOn);
 

@@ -17,7 +17,7 @@ services.AddOptions();
 
 services.RegisterTimerAction<SimpleTimerAction>(o =>
 {
-    o.IterationDelaySeconds = 1;
+    o.IterationDelaySeconds = 10;
 });
 
 services.RegisterTimerAction<CustomScheduledAction, CustomScheduler>(o => { });

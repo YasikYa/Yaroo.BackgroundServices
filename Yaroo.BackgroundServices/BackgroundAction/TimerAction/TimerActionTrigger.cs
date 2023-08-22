@@ -14,7 +14,20 @@ namespace Yaroo.BackgroundServices.BackgroundAction.TimerAction
 
         public async Task<TimerActionInput> WaitForTrigger(IServiceProvider services, CancellationToken cancellationToken)
         {
-            await Task.Delay(_scheduler.GetNextWaitInterval());
+            var (nextInterval, resetSignal) = _scheduler.GetNextWaitInterval();
+            try
+            {
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, resetSignal);
+                await Task.Delay(nextInterval, linkedCts.Token);
+            }
+            catch (TaskCanceledException)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    return TimerActionInput.Default;
+
+                return await WaitForTrigger(services, cancellationToken);
+            }
+
             return TimerActionInput.Default;
         }
     }

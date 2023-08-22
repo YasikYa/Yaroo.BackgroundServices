@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Yaroo.BackgroundServices.BackgroundAction;
 using Yaroo.BackgroundServices.BackgroundAction.QueueAction;
+using Yaroo.BackgroundServices.BackgroundAction.TimerAction.Scheduler;
+using Yaroo.BackgroundServices.SampleAPI.BackgroundActions;
 using Yaroo.BackgroundServices.SampleAPI.Models;
 
 namespace Yaroo.BackgroundServices.SampleAPI.Controllers
@@ -19,10 +21,17 @@ namespace Yaroo.BackgroundServices.SampleAPI.Controllers
             return Task.FromResult(Ok(response) as IActionResult);
         }
 
-        [HttpPost]
+        [HttpPost("enqueue")]
         public async Task<IActionResult> QueueBackgroundMessage([FromBody]string message, [FromServices]IBackgroundQueue<string> queue)
         {
             await queue.Enqueue(message);
+            return Ok();
+        }
+
+        [HttpPost("reset-custom-timer")]
+        public async Task<IActionResult> ForseTriggerTimerAction([FromServices]IScheduler<SimpleTimerAction> scheduler)
+        {
+            scheduler.ScheduleNextOverride(TimeSpan.FromMilliseconds(2000));
             return Ok();
         }
     }
