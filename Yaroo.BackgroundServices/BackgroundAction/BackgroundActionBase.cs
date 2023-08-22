@@ -4,8 +4,7 @@ namespace Yaroo.BackgroundServices.BackgroundAction
 {
     public abstract class BackgroundActionBase : IBackgroundAction
     {
-        public const string StoppedStatus = "Default:Stopped";
-        private string _status = "Default:ActionInitialized";
+        private string _status = DefaultStatuses.Common.Initialized;
 
         public virtual string Name => TypeNameHelper.GetTypeName(GetType());
         public abstract string Type { get; }
@@ -13,6 +12,6 @@ namespace Yaroo.BackgroundServices.BackgroundAction
 
         protected void UpdateStatus(string status) => _status = status;
 
-        public void Stop() => UpdateStatus(StoppedStatus);
+        public void Stop() => UpdateStatus(DefaultStatuses.Common.Stopped);
     }
 }

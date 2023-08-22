@@ -17,7 +17,7 @@
             if (_allCompleted)
                 return true;
 
-            _allCompleted = _actions.All(sa => sa.Status == StartupAction.Completed);
+            _allCompleted = _actions.All(sa => sa.Status == DefaultStatuses.StartupAction.Completed);
             return _allCompleted;
         }
     }

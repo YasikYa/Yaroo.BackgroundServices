@@ -2,16 +2,13 @@
 {
     public abstract class QueueAction<TMessage> : BackgroundActionBase, IBackgroundAction<TMessage>
     {
-        public const string ProcessingMessage = "Default:ProcessingMessage";
-        public const string WaitingForMessage = "Default:WaitingForMessage";
-
         public override string Type => "QueueAction";
 
         public async Task ExecuteAsync(TMessage input, IServiceProvider services, CancellationToken stoppingToken)
         {
-            UpdateStatus(ProcessingMessage);
+            UpdateStatus(DefaultStatuses.QueueAction.Running);
             await ExecuteOnDequeue(services, input, stoppingToken);
-            UpdateStatus(WaitingForMessage);
+            UpdateStatus(DefaultStatuses.QueueAction.WaitingForMessage);
         }
 
         protected abstract Task ExecuteOnDequeue(IServiceProvider services, TMessage message, CancellationToken stoppingToken);
