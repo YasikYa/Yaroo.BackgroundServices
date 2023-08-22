@@ -14,7 +14,7 @@ namespace Yaroo.BackgroundServices.SampleAPI.BackgroundActions
         protected override async Task ExecuteOnStartup(IServiceProvider services, CancellationToken stoppingToken)
         {
             await Task.Delay(5_000);
-            _logger.LogInformation("Simplestartup action completed");
+            _logger.LogInformation("SimpleStartup action completed");
         }
     }
 }

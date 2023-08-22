@@ -20,6 +20,8 @@ services.RegisterTimerAction<SimpleTimerAction>(o =>
     o.IterationDelaySeconds = 1;
 });
 
+services.RegisterTimerAction<CustomScheduledAction, CustomScheduler>(o => { });
+
 services.RegisterStartupAction<SimpleStartupAction>();
 
 services.RegisterBackgroundQueue<SimpleBackgroundWorkItem>()

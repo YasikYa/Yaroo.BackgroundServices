@@ -1,21 +1,20 @@
-﻿using Microsoft.Extensions.Options;
-using Yaroo.BackgroundServices.Utility;
+﻿using Yaroo.BackgroundServices.BackgroundAction.TimerAction.Scheduler;
 
 namespace Yaroo.BackgroundServices.BackgroundAction.TimerAction
 {
     public class TimerActionTrigger<TAction> : IBackgroundActionTrigger<TAction, TimerActionInput>
         where TAction : TimerAction
     {
-        private readonly int _defaultDelay;
+        private readonly IScheduler<TAction> _scheduler;
 
-        public TimerActionTrigger(IOptionsMonitor<TimerActionOptions> options)
+        public TimerActionTrigger(IScheduler<TAction> scheduler)
         {
-            _defaultDelay = options.Get(TypeNameHelper.GetTypeName<TAction>()).IterationDelaySeconds;
+            _scheduler = scheduler;
         }
 
         public async Task<TimerActionInput> WaitForTrigger(IServiceProvider services, CancellationToken cancellationToken)
         {
-            await Task.Delay(TimeSpan.FromSeconds(_defaultDelay));
+            await Task.Delay(_scheduler.GetNextWaitInterval());
             return TimerActionInput.Default;
         }
     }
