@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Yaroo.BackgroundServices.BackgroundAction;
+using Yaroo.BackgroundServices.BackgroundAction.QueueAction;
 using Yaroo.BackgroundServices.BackgroundAction.StartupAction;
 using Yaroo.BackgroundServices.BackgroundAction.TimerAction;
 using Yaroo.BackgroundServices.BackgroundService;
 using Yaroo.BackgroundServices.Utility;
+using static Yaroo.BackgroundServices.Extensions.ServiceCollectionExtensions;
 
 namespace Yaroo.BackgroundServices.Extensions
 {
@@ -20,7 +22,7 @@ namespace Yaroo.BackgroundServices.Extensions
 
             services.RegisterActionWithStatusCollector<TAction>();
             services.AddSingleton<IBackgroundAction<TActionIterationInput>>(sp => sp.GetRequiredService<TAction>());
-            services.AddSingleton<IBackgroundActionTrigger<TAction, TActionIterationInput>, TTrigger>();
+            services.TryAddSingleton<IBackgroundActionTrigger<TAction, TActionIterationInput>, TTrigger>();
             services.AddHostedService<LongRunningJob<TAction, TActionIterationInput>>();
             return services;
         }
@@ -47,6 +49,43 @@ namespace Yaroo.BackgroundServices.Extensions
             services.AddSingleton<IStartupAction>(sp => sp.GetRequiredService<TAction>());
 
             return services;
+        }
+
+        public static IBackgroundQueueHandlersBuilder<TMessage> RegisterBackgroundQueue<TMessage>(this IServiceCollection services)
+        {
+            if (services is null)
+                throw new ArgumentNullException(nameof(services));
+
+            services.TryAddSingleton<IBackgroundQueue<TMessage>, BackgroundQueue<TMessage>>();
+            services.TryAddSingleton<IBackgroundActionTrigger<QueueAction<TMessage>, TMessage>, QueueActionTrigger<TMessage>>();
+            services.AddHostedService<LongRunningJob<QueueAction<TMessage>, TMessage>>();
+
+            return new BackgroundQueueHandlersBuilder<TMessage>(services);
+        }
+
+        public interface IBackgroundQueueHandlersBuilder<TMessage>
+        {
+            public IServiceCollection Services { get; init; }
+
+            public IBackgroundQueueHandlersBuilder<TMessage> AddHandler<THandler>() where THandler : QueueAction<TMessage>;
+        }
+
+        public class BackgroundQueueHandlersBuilder<TMessage> : IBackgroundQueueHandlersBuilder<TMessage>
+        {
+            public IServiceCollection Services { get; init; }
+
+            public BackgroundQueueHandlersBuilder(IServiceCollection services)
+            {
+                Services = services;
+            }
+
+            public IBackgroundQueueHandlersBuilder<TMessage> AddHandler<THandler>() where THandler : QueueAction<TMessage>
+            {
+                Services.AddSingleton<QueueAction<TMessage>, THandler>();
+                Services.RegisterActionWithStatusCollector<THandler>();
+                Services.AddSingleton<IBackgroundAction<TMessage>>(sp => sp.GetRequiredService<THandler>());
+                return this;
+            }
         }
 
         private static IServiceCollection RegisterActionWithStatusCollector<TAction>(this IServiceCollection services)

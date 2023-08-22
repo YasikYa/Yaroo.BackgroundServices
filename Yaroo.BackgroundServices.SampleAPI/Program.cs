@@ -1,6 +1,7 @@
 using Yaroo.BackgroundServices.SampleAPI.BackgroundActions;
 using Yaroo.BackgroundServices.Extensions;
 using Yaroo.BackgroundServices.Middleware;
+using Yaroo.BackgroundServices.SampleAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,10 @@ services.RegisterTimerAction<SimpleTimerAction>(o =>
 });
 
 services.RegisterStartupAction<SimpleStartupAction>();
+
+services.RegisterBackgroundQueue<SimpleBackgroundWorkItem>()
+    .AddHandler<SimpleQueueActionOne>()
+    .AddHandler<SimpleQueueActionTwo>();
 
 var app = builder.Build();
 

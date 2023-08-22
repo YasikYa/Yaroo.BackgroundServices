@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Yaroo.BackgroundServices.BackgroundAction;
+using Yaroo.BackgroundServices.BackgroundAction.QueueAction;
 using Yaroo.BackgroundServices.SampleAPI.Models;
 
 namespace Yaroo.BackgroundServices.SampleAPI.Controllers
@@ -16,6 +17,13 @@ namespace Yaroo.BackgroundServices.SampleAPI.Controllers
             var statuses = statusCollector.CollectStatuses();
             var response = statuses.Select(s => new BackgroudServicesStatus { ActionName = s.Name, Status = s.Status, ActionType = s.Type });
             return Task.FromResult(Ok(response) as IActionResult);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QueueBackgroundMessage([FromBody]string message, [FromServices]IBackgroundQueue<string> queue)
+        {
+            await queue.Enqueue(message);
+            return Ok();
         }
     }
 }
